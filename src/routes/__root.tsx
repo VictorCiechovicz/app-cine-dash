@@ -1,9 +1,9 @@
-import { createRootRoute } from '@tanstack/react-router'
+import { Outlet, createRootRoute } from '@tanstack/react-router'
 
 function RootLayout() {
   return (
-    <main>
-      <h1>CineDash</h1>
+    <main className="min-h-svh">
+      <Outlet />
     </main>
   )
 }
