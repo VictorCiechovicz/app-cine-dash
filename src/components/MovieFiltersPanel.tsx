@@ -13,13 +13,11 @@ function hasActiveFilters(filters: MovieFilters): boolean {
 export interface MovieFiltersPanelProps {
   filters: MovieFilters
   setFilters: Dispatch<SetStateAction<MovieFilters>>
-  debounceMs?: number
 }
 
 export function MovieFiltersPanel({
   filters,
-  setFilters,
-  debounceMs = 400
+  setFilters
 }: MovieFiltersPanelProps) {
   const active = hasActiveFilters(filters)
 
@@ -101,11 +99,6 @@ export function MovieFiltersPanel({
           </select>
         </div>
       </div>
-      {active && (
-        <p className="mt-2 text-xs text-muted-foreground">
-          Resultados atualizados com debounce de {debounceMs}ms
-        </p>
-      )}
     </div>
   )
 }

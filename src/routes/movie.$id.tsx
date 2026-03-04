@@ -50,7 +50,7 @@ export function MovieDetailPage() {
   if (isPending || !movie) {
     return (
       <div className="flex min-h-svh flex-col p-4">
-        <div className="aspect-[2/3] w-full max-w-sm animate-pulse rounded-lg bg-muted" />
+        <div className="w-full max-w-sm animate-pulse rounded-lg bg-muted" />
         <div className="mt-4 h-8 w-3/4 animate-pulse rounded bg-muted" />
         <div className="mt-2 h-4 w-full animate-pulse rounded bg-muted" />
       </div>
@@ -66,7 +66,7 @@ export function MovieDetailPage() {
 
   return (
     <div className="min-h-svh bg-background">
-      <header className="sticky top-0 z-10 border-b border-border bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-10 border-b border-border bg-background/95 px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Button asChild variant="ghost" size="sm">
@@ -83,7 +83,7 @@ export function MovieDetailPage() {
       <main className="p-4 md:p-6">
         <div className="mx-auto max-w-4xl">
           <div className="grid gap-6 md:grid-cols-[300px_1fr]">
-            <div className="aspect-[2/3] w-full max-w-[300px] overflow-hidden rounded-lg border border-border bg-muted">
+            <div className="w-full max-w-[300px] overflow-hidden rounded-lg border border-border bg-muted">
               {posterUrl ? (
                 <img
                   src={posterUrl}
@@ -163,7 +163,7 @@ export function MovieDetailPage() {
               {trailerUrl && (
                 <section>
                   <h2 className="mb-2 text-lg font-semibold">Trailer</h2>
-                  <div className="aspect-video w-full max-w-2xl overflow-hidden rounded-lg border border-border bg-muted">
+                  <div className="w-full max-w-2xl overflow-hidden rounded-lg border border-border bg-muted">
                     <iframe
                       src={trailerUrl}
                       title={trailer?.name ?? 'Trailer'}

@@ -33,7 +33,7 @@ export function MovieCard({ movie }: { movie: TmdbMovie }) {
       className="group flex flex-col overflow-hidden rounded-lg border border-border bg-card shadow-sm transition-shadow hover:shadow-md"
       data-testid="movie-card"
     >
-      <div className="relative aspect-[2/3] w-full bg-muted">
+      <div className="relative w-full bg-muted">
         <Button
           type="button"
           variant="secondary"

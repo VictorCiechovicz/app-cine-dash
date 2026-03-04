@@ -87,7 +87,7 @@ export function WatchlistPage() {
 
   return (
     <div className="flex min-h-svh flex-col bg-background">
-      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur supports-backdrop-filter:bg-background/60">
         <h1 className="text-xl font-semibold">CineDash</h1>
         <nav className="flex items-center gap-2">
           <Button variant="ghost" size="sm" asChild>

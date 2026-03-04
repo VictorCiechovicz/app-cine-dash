@@ -1,24 +1,28 @@
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect } from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { useAuth } from '@/contexts/use-auth'
 import { useDebouncedValue } from '@/hooks/use-debounced-value'
-import { discoverMovies, type MovieFilters } from '@/api/tmdb'
+import { discoverMovies } from '@/api/tmdb'
 import { MovieCard } from '@/components/MovieCard'
 import { MovieFiltersPanel } from '@/components/MovieFiltersPanel'
-import { defaultFilters } from '@/utils/movie-filters-constants'
+import { useDashboardStore } from '@/stores/use-dashboard-store'
 import { toast } from 'sonner'
 
 const DEBOUNCE_MS = 400
+const SCROLL_SAVE_THROTTLE_MS = 200
 
 export function HomePage() {
-  const [filters, setFilters] = useState<MovieFilters>(defaultFilters)
-
+  const { filters, setFilters } = useDashboardStore()
   const navigate = useNavigate()
   const { logout } = useAuth()
   const sentinelRef = useRef<HTMLDivElement>(null)
+  const mainRef = useRef<HTMLElement>(null)
+  const scrollSaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  )
 
   const debouncedFilters = useDebouncedValue(filters, DEBOUNCE_MS)
 
@@ -63,11 +67,42 @@ export function HomePage() {
     }
   }, [isError, error])
 
+  useEffect(() => {
+    const saveScroll = () => {
+      useDashboardStore.getState().setScrollY(window.scrollY)
+    }
+    const onScroll = () => {
+      if (scrollSaveTimeoutRef.current) return
+      scrollSaveTimeoutRef.current = setTimeout(() => {
+        saveScroll()
+        scrollSaveTimeoutRef.current = null
+      }, SCROLL_SAVE_THROTTLE_MS)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      if (scrollSaveTimeoutRef.current)
+        clearTimeout(scrollSaveTimeoutRef.current)
+    }
+  }, [])
+
   const movies = data?.pages.flatMap(p => p.results) ?? []
+
+  const hasRestoredScroll = useRef(false)
+  useEffect(() => {
+    if (hasRestoredScroll.current || isPending || movies.length === 0) return
+    hasRestoredScroll.current = true
+    const saved = useDashboardStore.getState().scrollY
+    if (saved > 0) {
+      const maxScroll =
+        document.documentElement.scrollHeight - window.innerHeight
+      window.scrollTo(0, Math.min(saved, maxScroll))
+    }
+  }, [isPending, movies.length])
 
   return (
     <div className="flex min-h-svh flex-col bg-background">
-      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3">
         <h1 className="text-xl font-semibold">CineDash</h1>
         <nav className="flex items-center gap-2">
           <Button variant="ghost" size="sm" asChild>
@@ -87,14 +122,10 @@ export function HomePage() {
         </nav>
       </header>
 
-      <main className="flex-1 p-4">
+      <main ref={mainRef} className="flex-1 p-4">
         <section className="mb-6">
           <h2 className="mb-4 text-lg font-semibold">Filmes</h2>
-          <MovieFiltersPanel
-            filters={filters}
-            setFilters={setFilters}
-            debounceMs={DEBOUNCE_MS}
-          />
+          <MovieFiltersPanel filters={filters} setFilters={setFilters} />
 
           {isError && (
             <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-destructive">
@@ -108,7 +139,7 @@ export function HomePage() {
               {Array.from({ length: 10 }).map((_, i) => (
                 <div
                   key={i}
-                  className="aspect-[2/3] animate-pulse rounded-lg bg-muted"
+                  className="animate-pulse rounded-lg bg-muted"
                   aria-hidden
                 />
               ))}

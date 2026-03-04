@@ -4,6 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryWrapper } from '@/test/test-utils'
 import { HomePage } from '@/routes/home'
+import { useDashboardStore } from '@/stores/use-dashboard-store'
 import type { MovieFilters } from '@/api/tmdb'
 
 const mockDiscoverMovies = vi.fn()
@@ -68,6 +69,7 @@ describe('HomePage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockDiscoverMovies.mockResolvedValue(mockMoviesPage)
+    useDashboardStore.getState().reset()
   })
 
   it('renders header with CineDash, Minha Lista and Sair', () => {
