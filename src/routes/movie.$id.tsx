@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Link, useParams } from '@tanstack/react-router'
 import { fetchMovieDetails, getPosterUrl, type TmdbVideo } from '@/api/tmdb'
 import { Button } from '@/components/ui/button'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { useWatchlistStore } from '@/stores/use-watchlist-store'
 import { ListPlus, Check } from 'lucide-react'
 
@@ -65,13 +66,16 @@ export function MovieDetailPage() {
   return (
     <div className="min-h-svh bg-background">
       <header className="sticky top-0 z-10 border-b border-border bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="flex items-center gap-4">
-          <Button asChild variant="ghost" size="sm">
-            <Link to="/home">← Voltar</Link>
-          </Button>
-          <Button asChild variant="ghost" size="sm">
-            <Link to="/watchlist">Minha Lista</Link>
-          </Button>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button asChild variant="ghost" size="sm">
+              <Link to="/home">← Voltar</Link>
+            </Button>
+            <Button asChild variant="ghost" size="sm">
+              <Link to="/watchlist">Minha Lista</Link>
+            </Button>
+          </div>
+          <ThemeToggle />
         </div>
       </header>
 

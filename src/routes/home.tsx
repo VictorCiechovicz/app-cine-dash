@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { useAuth } from '@/contexts/use-auth'
 import { useDebouncedValue } from '@/hooks/use-debounced-value'
 import { discoverMovies, type MovieFilters } from '@/api/tmdb'
@@ -63,6 +64,7 @@ export function HomePage() {
           <Button variant="ghost" size="sm" asChild>
             <Link to="/watchlist">Minha Lista</Link>
           </Button>
+          <ThemeToggle />
           <Button
             variant="outline"
             size="sm"

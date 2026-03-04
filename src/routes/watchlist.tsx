@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { useAuth } from '@/contexts/use-auth'
 import { useWatchlistStore } from '@/stores/use-watchlist-store'
 import { fetchMovieGenres } from '@/api/tmdb'
@@ -91,6 +92,7 @@ export function WatchlistPage() {
           <Button variant="ghost" size="sm" asChild>
             <Link to="/home">Filmes</Link>
           </Button>
+          <ThemeToggle />
           <Button
             variant="outline"
             size="sm"

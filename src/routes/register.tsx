@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { useAuth } from '@/contexts/use-auth'
 import { createFakeToken } from '@/lib/auth-storage'
 
@@ -54,9 +55,13 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center bg-background p-4">
-      <div className="w-full max-w-sm space-y-8">
-        <div className="flex flex-col items-center gap-2 text-center">
+    <div className="flex min-h-svh flex-col bg-background">
+      <header className="flex justify-end border-b border-border px-4 py-3">
+        <ThemeToggle />
+      </header>
+      <div className="flex flex-1 flex-col items-center justify-center p-4">
+        <div className="w-full max-w-sm space-y-8">
+          <div className="flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">CineDash</h1>
           <p className="text-sm text-muted-foreground">Crie sua conta</p>
         </div>
@@ -172,6 +177,7 @@ export function RegisterPage() {
             Entrar
           </Link>
         </p>
+      </div>
       </div>
     </div>
   )
