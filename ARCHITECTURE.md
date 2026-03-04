@@ -20,7 +20,7 @@ Este documento descreve as decisões técnicas do projeto e como os requisitos f
 | Roteamento    | TanStack Router                | Requisito; rotas tipadas, `beforeLoad` para proteção, file-based. |
 | Server state  | TanStack Query                 | Requisito; cache, invalidação, `useInfiniteQuery` para paginação. |
 | Client state  | Zustand                        | Requisito; leve, middleware `persist` para localStorage.          |
-| UI components | Shadcn/ui + Tailwind           | Requisito; acessibilidade (Radix) e consistência visual.          |
+| UI components | Shadcn/ui + Tailwind           | Requisito; acessibilidade e consistência visual.                  |
 | Formulários   | React Hook Form + Zod          | Requisito; validação no cliente e DX boa.                         |
 | Testes        | Vitest + React Testing Library | Requisito; unitários e componentes.                               |
 | Toasts        | Sonner (Shadcn)                | Feedback de ações (adicionar/remover da lista, erros).            |
@@ -29,7 +29,7 @@ Este documento descreve as decisões técnicas do projeto e como os requisitos f
 
 ## Estrutura de pastas
 
-Organização por **papel técnico** (não FSD completo), priorizando clareza e crescimento controlado:
+Organização por **papel técnico** (não FSD completo), clean code para responsabilidades únicas priorizando clareza e crescimento controlado:
 
 ```
 src/
@@ -44,8 +44,6 @@ src/
 ├── test/          # Setup e helpers de teste
 └── utils/         # Constantes (filtros, anos, ratings)
 ```
-
-- **Por que não FSD completo?** O escopo do desafio cabe bem em pastas por tipo (routes, components, stores). FSD seria útil com mais domínios e times; aqui a separação API / hooks / stores / components já evita acoplamento e facilita testes.
 
 ---
 
@@ -104,7 +102,7 @@ src/
 
 - **TanStack Table:** a lista da watchlist é uma tabela simples com ordenação em estado local; atende o requisito. TanStack Table seria escolhido para ordenação multi-coluna, paginação no cliente ou colunas redimensionáveis.
 - **TanStack Form:** React Hook Form + Zod já cobrem formulários e validação do desafio; TanStack Form seria uma alternativa equivalente.
-- **Busca por texto:** o desafio pedia debounce no input; foi implementado nos **filtros** (gênero, ano, nota). Campo de busca por nome com `/search/movie` seria uma extensão natural.
+- **Busca por texto:** o desafio pedia debounce no input; foi implementado nos **filtros** (gênero, ano, nota).
 - **Cookies para auth:** token em `localStorage` atende “persistir no localStorage ou cookie” e simplifica o fluxo sem backend.
 
 ---
