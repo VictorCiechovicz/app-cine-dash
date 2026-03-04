@@ -1,6 +1,15 @@
-# CineDash
+# Instruções – CineDash
+
+## Projeto escolhido
 
 **CineDash** – Dashboard de curadoria e descoberta de filmes usando a API do TMDB, pensado como ferramenta interna para curadores selecionarem filmes para catálogo de streaming.
+
+---
+
+## Pré-requisitos
+
+- **Node.js** 18+ (recomendado 20+)
+- **npm** ou **yarn**
 
 ---
 
@@ -48,13 +57,13 @@ Acesse no navegador o endereço exibido no terminal (geralmente `http://localhos
 
 ## Outros comandos
 
-| Comando            | Descrição                      |
-| ------------------ | ------------------------------ |
-| `npm run build`    | Build de produção (`dist/`)    |
-| `npm run preview`  | Preview do build de produção   |
-| `npm run lint`     | Executar o ESLint              |
-| `npm run test`     | Rodar testes (Vitest) em watch |
-| `npm run test:run` | Rodar testes uma vez           |
+| Comando           | Descrição                          |
+|------------------|------------------------------------|
+| `npm run build`   | Build de produção (`dist/`)        |
+| `npm run preview`| Preview do build de produção        |
+| `npm run lint`    | Executar o ESLint                   |
+| `npm run test`    | Rodar testes (Vitest) em watch      |
+| `npm run test:run`| Rodar testes uma vez                |
 
 ---
 
