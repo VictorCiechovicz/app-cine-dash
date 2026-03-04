@@ -29,6 +29,7 @@ interface WatchlistState {
   addFromDetails: (movie: TmdbMovieDetails) => void
   remove: (movieId: number) => void
   has: (movieId: number) => boolean
+  reset: () => void
 }
 
 const WATCHLIST_STORAGE_KEY = 'cinedash-watchlist'
@@ -60,6 +61,10 @@ export const useWatchlistStore = create<WatchlistState>()(
 
       has(movieId: number) {
         return get().items.some(item => item.id === movieId)
+      },
+
+      reset() {
+        set({ items: [] })
       }
     }),
     { name: WATCHLIST_STORAGE_KEY }

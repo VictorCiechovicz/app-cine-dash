@@ -6,8 +6,8 @@ import { ThemeToggle } from '@/components/ThemeToggle'
 import { useAuth } from '@/contexts/use-auth'
 import { useDebouncedValue } from '@/hooks/use-debounced-value'
 import { discoverMovies, type MovieFilters } from '@/api/tmdb'
-import { MovieCard } from '@/components/home/MovieCard'
-import { MovieFiltersPanel } from '@/components/home/MovieFiltersPanel'
+import { MovieCard } from '@/components/MovieCard'
+import { MovieFiltersPanel } from '@/components/MovieFiltersPanel'
 import { defaultFilters } from '@/utils/movie-filters-constants'
 
 const DEBOUNCE_MS = 400

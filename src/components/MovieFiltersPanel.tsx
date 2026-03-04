@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { fetchMovieGenres, type MovieFilters } from '@/api/tmdb'
-import { YEARS, RATING_OPTIONS } from '../../utils/movie-filters-constants'
+import { YEARS, RATING_OPTIONS } from '../utils/movie-filters-constants'
 import { defaultFilters } from '@/utils/movie-filters-constants'
 
 function hasActiveFilters(filters: MovieFilters): boolean {
