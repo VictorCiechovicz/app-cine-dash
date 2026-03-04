@@ -63,26 +63,6 @@ export function getPosterUrl(
   return `${TMDB_IMAGE_BASE}/${size}${path}`
 }
 
-export async function fetchTrendingMovies(
-  page: number
-): Promise<TmdbPaginatedResponse<TmdbMovie>> {
-  const res = await fetch(
-    `${TMDB_BASE}/trending/movie/day?api_key=${API_KEY}&language=pt-BR&page=${page}`
-  )
-  if (!res.ok) throw new Error(`TMDB API error: ${res.status}`)
-  return res.json()
-}
-
-export async function fetchPopularMovies(
-  page: number
-): Promise<TmdbPaginatedResponse<TmdbMovie>> {
-  const res = await fetch(
-    `${TMDB_BASE}/movie/popular?api_key=${API_KEY}&language=pt-BR&page=${page}`
-  )
-  if (!res.ok) throw new Error(`TMDB API error: ${res.status}`)
-  return res.json()
-}
-
 export async function fetchMovieGenres(): Promise<TmdbGenre[]> {
   const res = await fetch(
     `${TMDB_BASE}/genre/movie/list?api_key=${API_KEY}&language=pt-BR`

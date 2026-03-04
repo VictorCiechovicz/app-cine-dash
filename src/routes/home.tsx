@@ -1,10 +1,10 @@
 import { useRef, useEffect, useState } from 'react'
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/use-auth'
 import { useDebouncedValue } from '@/hooks/use-debounced-value'
-import { discoverMovies, fetchMovieGenres, type MovieFilters } from '@/api/tmdb'
+import { discoverMovies, type MovieFilters } from '@/api/tmdb'
 import { MovieCard } from '@/components/home/MovieCard'
 import { MovieFiltersPanel } from '@/components/home/MovieFiltersPanel'
 import { defaultFilters } from '@/utils/movie-filters-constants'
@@ -19,11 +19,6 @@ export function HomePage() {
   const sentinelRef = useRef<HTMLDivElement>(null)
 
   const debouncedFilters = useDebouncedValue(filters, DEBOUNCE_MS)
-
-  const { data: genres = [] } = useQuery({
-    queryKey: ['movie-genres'],
-    queryFn: fetchMovieGenres
-  })
 
   const {
     data,
@@ -60,15 +55,6 @@ export function HomePage() {
 
   const movies = data?.pages.flatMap(p => p.results) ?? []
 
-  const handleFilterChange = <K extends keyof MovieFilters>(
-    key: K,
-    value: MovieFilters[K]
-  ) => {
-    setFilters(prev => ({ ...prev, [key]: value }))
-  }
-
-  const clearFilters = () => setFilters(defaultFilters)
-
   return (
     <div className="flex min-h-svh flex-col bg-background">
       <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -92,9 +78,7 @@ export function HomePage() {
           <h2 className="mb-4 text-lg font-semibold">Filmes</h2>
           <MovieFiltersPanel
             filters={filters}
-            onFilterChange={handleFilterChange}
-            onClearFilters={clearFilters}
-            genres={genres}
+            setFilters={setFilters}
             debounceMs={DEBOUNCE_MS}
           />
 

@@ -1,7 +1,10 @@
+import { type Dispatch, type SetStateAction } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import type { MovieFilters, TmdbGenre } from '@/api/tmdb'
+import { fetchMovieGenres, type MovieFilters } from '@/api/tmdb'
 import { YEARS, RATING_OPTIONS } from '../../utils/movie-filters-constants'
+import { defaultFilters } from '@/utils/movie-filters-constants'
 
 function hasActiveFilters(filters: MovieFilters): boolean {
   return !!(filters.genreId || filters.year || filters.minRating)
@@ -9,23 +12,30 @@ function hasActiveFilters(filters: MovieFilters): boolean {
 
 export interface MovieFiltersPanelProps {
   filters: MovieFilters
-  onFilterChange: <K extends keyof MovieFilters>(
-    key: K,
-    value: MovieFilters[K]
-  ) => void
-  onClearFilters: () => void
-  genres: TmdbGenre[]
+  setFilters: Dispatch<SetStateAction<MovieFilters>>
   debounceMs?: number
 }
 
 export function MovieFiltersPanel({
   filters,
-  onFilterChange,
-  onClearFilters,
-  genres,
+  setFilters,
   debounceMs = 400
 }: MovieFiltersPanelProps) {
   const active = hasActiveFilters(filters)
+
+  const { data: genres = [] } = useQuery({
+    queryKey: ['movie-genres'],
+    queryFn: fetchMovieGenres
+  })
+
+  const handleFilterChange = <K extends keyof MovieFilters>(
+    key: K,
+    value: MovieFilters[K]
+  ) => {
+    setFilters(prev => ({ ...prev, [key]: value }))
+  }
+
+  const clearFilters = () => setFilters(defaultFilters)
 
   return (
     <div className="mb-6 rounded-lg border border-border bg-muted/30 p-4">
@@ -36,7 +46,7 @@ export function MovieFiltersPanel({
             type="button"
             variant="ghost"
             size="sm"
-            onClick={onClearFilters}
+            onClick={clearFilters}
           >
             Limpar
           </Button>
@@ -48,7 +58,7 @@ export function MovieFiltersPanel({
           <select
             id="filter-genre"
             value={filters.genreId}
-            onChange={e => onFilterChange('genreId', e.target.value)}
+            onChange={e => handleFilterChange('genreId', e.target.value)}
             className="h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <option value="">Todos</option>
@@ -64,7 +74,7 @@ export function MovieFiltersPanel({
           <select
             id="filter-year"
             value={filters.year}
-            onChange={e => onFilterChange('year', e.target.value)}
+            onChange={e => handleFilterChange('year', e.target.value)}
             className="h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <option value="">Qualquer</option>
@@ -80,7 +90,7 @@ export function MovieFiltersPanel({
           <select
             id="filter-rating"
             value={filters.minRating}
-            onChange={e => onFilterChange('minRating', e.target.value)}
+            onChange={e => handleFilterChange('minRating', e.target.value)}
             className="h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {RATING_OPTIONS.map(opt => (
