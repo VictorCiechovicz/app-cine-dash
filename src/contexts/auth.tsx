@@ -1,8 +1,4 @@
-import {
-  useCallback,
-  useSyncExternalStore,
-  type ReactNode
-} from 'react'
+import { useCallback, useSyncExternalStore, type ReactNode } from 'react'
 import {
   getToken,
   setToken as persistToken,
@@ -18,7 +14,7 @@ const authStore = {
     return () => authStore.listeners.delete(listener)
   },
   emit() {
-    authStore.listeners.forEach((l) => l())
+    authStore.listeners.forEach(l => l())
   }
 }
 
@@ -26,16 +22,8 @@ interface AuthProviderProps {
   children: ReactNode
 }
 
-function getServerSnapshot() {
-  return null
-}
-
 export function AuthProvider({ children }: AuthProviderProps) {
-  const token = useSyncExternalStore(
-    authStore.subscribe,
-    authStore.getSnapshot,
-    getServerSnapshot
-  )
+  const token = useSyncExternalStore(authStore.subscribe, authStore.getSnapshot)
 
   const login = useCallback((newToken: string) => {
     persistToken(newToken)

@@ -19,7 +19,7 @@ const criarContaSchema = z
       .min(7, 'Senha deve ter mais de 6 caracteres'),
     confirmPassword: z.string().min(1, 'Confirme a senha')
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine(data => data.password === data.confirmPassword, {
     message: 'As senhas não coincidem',
     path: ['confirmPassword']
   })
@@ -45,11 +45,10 @@ export function CriarContaPage() {
     try {
       const token = createFakeToken({ email: data.email })
       login(token)
-      navigate({ to: '/busca' })
+      navigate({ to: '/estante' })
     } catch (err) {
       setError('root', {
-        message:
-          err instanceof Error ? err.message : 'Erro ao criar conta.'
+        message: err instanceof Error ? err.message : 'Erro ao criar conta.'
       })
     }
   }
@@ -99,7 +98,7 @@ export function CriarContaPage() {
                   variant="ghost"
                   size="icon"
                   className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground"
-                  onClick={() => setShowPassword((v) => !v)}
+                  onClick={() => setShowPassword(v => !v)}
                   aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                   tabIndex={-1}
                 >
@@ -134,7 +133,7 @@ export function CriarContaPage() {
                   variant="ghost"
                   size="icon"
                   className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground"
-                  onClick={() => setShowPassword((v) => !v)}
+                  onClick={() => setShowPassword(v => !v)}
                   aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                   tabIndex={-1}
                 >

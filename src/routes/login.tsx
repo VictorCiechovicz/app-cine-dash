@@ -39,7 +39,7 @@ export function LoginPage() {
     try {
       const token = createFakeToken({ email: data.email })
       login(token)
-      navigate({ to: '/busca' })
+      navigate({ to: '/estante' })
     } catch (err) {
       setError('root', {
         message: err instanceof Error ? err.message : 'Erro ao fazer login.'
@@ -92,7 +92,7 @@ export function LoginPage() {
                   variant="ghost"
                   size="icon"
                   className="absolute right-0 top-0 h-full px-3 text-muted-foreground hover:text-foreground"
-                  onClick={() => setShowPassword((v) => !v)}
+                  onClick={() => setShowPassword(v => !v)}
                   aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                   tabIndex={-1}
                 >
