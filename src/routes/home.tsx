@@ -1,15 +1,29 @@
-import { useRef, useEffect } from 'react'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useRef, useEffect, useState } from 'react'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/use-auth'
-import { fetchTrendingMovies } from '@/api/tmdb'
+import { useDebouncedValue } from '@/hooks/use-debounced-value'
+import { discoverMovies, fetchMovieGenres, type MovieFilters } from '@/api/tmdb'
 import { MovieCard } from '@/components/home/MovieCard'
+import { MovieFiltersPanel } from '@/components/home/MovieFiltersPanel'
+import { defaultFilters } from '@/utils/movie-filters-constants'
+
+const DEBOUNCE_MS = 400
 
 export function HomePage() {
+  const [filters, setFilters] = useState<MovieFilters>(defaultFilters)
+
   const navigate = useNavigate()
   const { logout } = useAuth()
   const sentinelRef = useRef<HTMLDivElement>(null)
+
+  const debouncedFilters = useDebouncedValue(filters, DEBOUNCE_MS)
+
+  const { data: genres = [] } = useQuery({
+    queryKey: ['movie-genres'],
+    queryFn: fetchMovieGenres
+  })
 
   const {
     data,
@@ -20,8 +34,8 @@ export function HomePage() {
     isError,
     error
   } = useInfiniteQuery({
-    queryKey: ['movies', 'trending'],
-    queryFn: ({ pageParam }) => fetchTrendingMovies(pageParam),
+    queryKey: ['movies', 'discover', debouncedFilters],
+    queryFn: ({ pageParam }) => discoverMovies(debouncedFilters, pageParam),
     initialPageParam: 1,
     getNextPageParam: lastPage => {
       if (lastPage.page >= lastPage.total_pages) return undefined
@@ -46,6 +60,15 @@ export function HomePage() {
 
   const movies = data?.pages.flatMap(p => p.results) ?? []
 
+  const handleFilterChange = <K extends keyof MovieFilters>(
+    key: K,
+    value: MovieFilters[K]
+  ) => {
+    setFilters(prev => ({ ...prev, [key]: value }))
+  }
+
+  const clearFilters = () => setFilters(defaultFilters)
+
   return (
     <div className="flex min-h-svh flex-col bg-background">
       <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -66,27 +89,19 @@ export function HomePage() {
 
       <main className="flex-1 p-4">
         <section className="mb-6">
-          <h2 className="mb-4 text-lg font-semibold">Em alta (Trending)</h2>
+          <h2 className="mb-4 text-lg font-semibold">Filmes</h2>
+          <MovieFiltersPanel
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onClearFilters={clearFilters}
+            genres={genres}
+            debounceMs={DEBOUNCE_MS}
+          />
 
           {isError && (
             <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-destructive">
               <p className="font-medium">Erro ao carregar filmes</p>
-              <p className="text-sm mt-1">{error?.message}</p>
-              <p className="text-sm mt-2 text-muted-foreground">
-                Configure{' '}
-                <code className="rounded bg-muted px-1">VITE_TMDB_API_KEY</code>{' '}
-                no arquivo <code className="rounded bg-muted px-1">.env</code>.
-                Obtenha uma chave em{' '}
-                <a
-                  href="https://www.themoviedb.org/settings/api"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline"
-                >
-                  themoviedb.org
-                </a>
-                .
-              </p>
+              <p className="mt-1 text-sm">{error?.message}</p>
             </div>
           )}
 
@@ -121,7 +136,9 @@ export function HomePage() {
           )}
 
           {!isPending && !isError && movies.length === 0 && (
-            <p className="text-muted-foreground">Nenhum filme encontrado.</p>
+            <p className="text-muted-foreground">
+              Nenhum filme encontrado. Tente outros filtros.
+            </p>
           )}
         </section>
       </main>

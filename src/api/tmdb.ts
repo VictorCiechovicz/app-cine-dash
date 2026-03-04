@@ -16,6 +16,18 @@ export interface TmdbPaginatedResponse<T> {
   total_pages: number
   total_results: number
 }
+
+export interface TmdbGenre {
+  id: number
+  name: string
+}
+
+export interface MovieFilters {
+  genreId: string
+  year: string
+  minRating: string
+}
+
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY
 
 export function getPosterUrl(
@@ -42,6 +54,37 @@ export async function fetchPopularMovies(
   const res = await fetch(
     `${TMDB_BASE}/movie/popular?api_key=${API_KEY}&language=pt-BR&page=${page}`
   )
+  if (!res.ok) throw new Error(`TMDB API error: ${res.status}`)
+  return res.json()
+}
+
+export async function fetchMovieGenres(): Promise<TmdbGenre[]> {
+  const res = await fetch(
+    `${TMDB_BASE}/genre/movie/list?api_key=${API_KEY}&language=pt-BR`
+  )
+  if (!res.ok) throw new Error(`TMDB API error: ${res.status}`)
+  const data = await res.json()
+  return data.genres ?? []
+}
+
+function buildDiscoverParams(filters: MovieFilters, page: number): string {
+  const params = new URLSearchParams({
+    api_key: API_KEY,
+    language: 'pt-BR',
+    page: String(page)
+  })
+  if (filters.genreId) params.set('with_genres', filters.genreId)
+  if (filters.year) params.set('primary_release_year', filters.year)
+  if (filters.minRating) params.set('vote_average.gte', filters.minRating)
+  return params.toString()
+}
+
+export async function discoverMovies(
+  filters: MovieFilters,
+  page: number
+): Promise<TmdbPaginatedResponse<TmdbMovie>> {
+  const query = buildDiscoverParams(filters, page)
+  const res = await fetch(`${TMDB_BASE}/discover/movie?${query}`)
   if (!res.ok) throw new Error(`TMDB API error: ${res.status}`)
   return res.json()
 }
