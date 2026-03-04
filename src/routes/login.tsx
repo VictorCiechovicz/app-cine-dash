@@ -39,7 +39,7 @@ export function LoginPage() {
     try {
       const token = createFakeToken({ email: data.email })
       login(token)
-      navigate({ to: '/estante' })
+      navigate({ to: '/home' })
     } catch (err) {
       setError('root', {
         message: err instanceof Error ? err.message : 'Erro ao fazer login.'
@@ -125,7 +125,7 @@ export function LoginPage() {
         <p className="text-center text-sm text-muted-foreground">
           Não tem conta?{' '}
           <Link
-            to="/criar-conta"
+            to="/register"
             className="font-medium text-primary underline-offset-4 hover:underline"
           >
             Criar conta

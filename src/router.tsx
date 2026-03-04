@@ -1,8 +1,8 @@
 import { createRoute, createRouter, redirect } from '@tanstack/react-router'
 import { getToken } from '@/lib/auth-storage'
 import { Route as rootRoute } from './routes/__root'
-import { CriarContaPage } from './routes/criar-conta'
-import { EstantePage } from './routes/estante'
+import { RegisterPage } from './routes/register'
+import { HomePage } from './routes/home'
 import { LoginPage } from './routes/login'
 
 function requireAuth() {
@@ -23,24 +23,24 @@ const loginRoute = createRoute({
   component: LoginPage
 })
 
-const criarContaRoute = createRoute({
+const registerRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/criar-conta',
-  component: CriarContaPage
+  path: '/register',
+  component: RegisterPage
 })
 
-const estanteRoute = createRoute({
+const homeRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/estante',
-  component: EstantePage,
+  path: '/home',
+  component: HomePage,
   beforeLoad: requireAuth
 })
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
   loginRoute,
-  criarContaRoute,
-  estanteRoute
+  registerRoute,
+  homeRoute
 ])
 
 export const router = createRouter({ routeTree })

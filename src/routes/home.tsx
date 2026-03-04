@@ -2,14 +2,14 @@ import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/use-auth'
 
-export function EstantePage() {
+export function HomePage() {
   const navigate = useNavigate()
   const { logout } = useAuth()
 
   return (
     <div className="flex min-h-svh flex-col bg-background p-4">
       <header className="flex items-center justify-between border-b border-border pb-4">
-        <h1 className="text-xl font-semibold">Estante</h1>
+        <h1 className="text-xl font-semibold">Home</h1>
         <nav className="flex items-center gap-2">
           <Button
             variant="outline"

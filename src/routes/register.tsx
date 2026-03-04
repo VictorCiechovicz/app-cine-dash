@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label'
 import { useAuth } from '@/contexts/use-auth'
 import { createFakeToken } from '@/lib/auth-storage'
 
-const criarContaSchema = z
+const registerSchema = z
   .object({
     email: z.string().min(1, 'E-mail é obrigatório').email('E-mail inválido'),
     password: z
@@ -24,9 +24,9 @@ const criarContaSchema = z
     path: ['confirmPassword']
   })
 
-type CriarContaFormData = z.infer<typeof criarContaSchema>
+type RegisterFormData = z.infer<typeof registerSchema>
 
-export function CriarContaPage() {
+export function RegisterPage() {
   const navigate = useNavigate()
   const { login } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
@@ -36,16 +36,16 @@ export function CriarContaPage() {
     handleSubmit,
     formState: { errors, isSubmitting },
     setError
-  } = useForm<CriarContaFormData>({
-    resolver: zodResolver(criarContaSchema),
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
     defaultValues: { email: '', password: '', confirmPassword: '' }
   })
 
-  const onSubmit = async (data: CriarContaFormData) => {
+  const onSubmit = async (data: RegisterFormData) => {
     try {
       const token = createFakeToken({ email: data.email })
       login(token)
-      navigate({ to: '/estante' })
+      navigate({ to: '/home' })
     } catch (err) {
       setError('root', {
         message: err instanceof Error ? err.message : 'Erro ao criar conta.'
@@ -64,9 +64,9 @@ export function CriarContaPage() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="criar-email">E-mail</Label>
+              <Label htmlFor="register-email">E-mail</Label>
               <Input
-                id="criar-email"
+                id="register-email"
                 type="email"
                 placeholder="seu@email.com"
                 autoComplete="email"
@@ -81,10 +81,10 @@ export function CriarContaPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="criar-password">Senha</Label>
+              <Label htmlFor="register-password">Senha</Label>
               <div className="relative">
                 <Input
-                  id="criar-password"
+                  id="register-password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
                   autoComplete="new-password"
@@ -116,10 +116,10 @@ export function CriarContaPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="criar-confirm-password">Confirmar senha</Label>
+              <Label htmlFor="register-confirm-password">Confirmar senha</Label>
               <div className="relative">
                 <Input
-                  id="criar-confirm-password"
+                  id="register-confirm-password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
                   autoComplete="new-password"
@@ -159,7 +159,7 @@ export function CriarContaPage() {
           )}
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? 'Criando conta…' : 'Criar conta'}
+            {isSubmitting ? 'Criando conta…' : 'Criar'}
           </Button>
         </form>
 
