@@ -9,6 +9,7 @@ import { discoverMovies, type MovieFilters } from '@/api/tmdb'
 import { MovieCard } from '@/components/MovieCard'
 import { MovieFiltersPanel } from '@/components/MovieFiltersPanel'
 import { defaultFilters } from '@/utils/movie-filters-constants'
+import { toast } from 'sonner'
 
 const DEBOUNCE_MS = 400
 
@@ -53,6 +54,14 @@ export function HomePage() {
     observer.observe(el)
     return () => observer.disconnect()
   }, [hasNextPage, isFetchingNextPage, fetchNextPage])
+
+  useEffect(() => {
+    if (isError && error) {
+      toast.error('Erro ao carregar filmes', {
+        description: error.message
+      })
+    }
+  }, [isError, error])
 
   const movies = data?.pages.flatMap(p => p.results) ?? []
 

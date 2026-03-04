@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/use-auth'
 import { useWatchlistStore } from '@/stores/use-watchlist-store'
 import { fetchMovieGenres } from '@/api/tmdb'
 import { Trash2, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react'
+import { toast } from 'sonner'
 
 type SortKey = 'title' | 'genre' | 'rating'
 type SortOrder = 'asc' | 'desc'
@@ -197,7 +198,12 @@ export function WatchlistPage() {
                           variant="ghost"
                           size="sm"
                           className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-                          onClick={() => remove(item.id)}
+                          onClick={() => {
+                            remove(item.id)
+                            toast.success('Removido da lista', {
+                              description: item.title
+                            })
+                          }}
                           aria-label={`Remover ${item.title} da lista`}
                         >
                           <Trash2 className="size-4" />

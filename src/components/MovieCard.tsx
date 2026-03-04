@@ -3,6 +3,7 @@ import { getPosterUrl, type TmdbMovie } from '@/api/tmdb'
 import { useWatchlistStore } from '@/stores/use-watchlist-store'
 import { Button } from '@/components/ui/button'
 import { ListPlus, Check } from 'lucide-react'
+import { toast } from 'sonner'
 
 export function MovieCard({ movie }: { movie: TmdbMovie }) {
   const posterUrl = getPosterUrl(movie.poster_path, 'w500')
@@ -12,8 +13,17 @@ export function MovieCard({ movie }: { movie: TmdbMovie }) {
   const handleListClick = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    if (inList) remove(movie.id)
-    else addFromMovie(movie)
+    if (inList) {
+      remove(movie.id)
+      toast.success('Removido da lista', {
+        description: movie.title
+      })
+    } else {
+      addFromMovie(movie)
+      toast.success('Adicionado à lista', {
+        description: movie.title
+      })
+    }
   }
 
   return (

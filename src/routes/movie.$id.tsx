@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { useWatchlistStore } from '@/stores/use-watchlist-store'
 import { ListPlus, Check } from 'lucide-react'
+import { toast } from 'sonner'
 
 function getTrailerUrl(video: TmdbVideo): string | null {
   if (video.site !== 'YouTube' || !video.key) return null
@@ -105,9 +106,19 @@ export function MovieDetailPage() {
                   type="button"
                   variant={movie && has(movie.id) ? 'secondary' : 'outline'}
                   size="sm"
-                  onClick={() =>
-                    has(movie.id) ? remove(movie.id) : addFromDetails(movie)
-                  }
+                  onClick={() => {
+                    if (has(movie.id)) {
+                      remove(movie.id)
+                      toast.success('Removido da lista', {
+                        description: movie.title
+                      })
+                    } else {
+                      addFromDetails(movie)
+                      toast.success('Adicionado à lista', {
+                        description: movie.title
+                      })
+                    }
+                  }}
                   className="shrink-0"
                 >
                   {movie && has(movie.id) ? (
