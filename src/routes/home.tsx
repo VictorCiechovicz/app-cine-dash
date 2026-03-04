@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/use-auth'
 import { useDebouncedValue } from '@/hooks/use-debounced-value'
@@ -60,6 +60,9 @@ export function HomePage() {
       <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <h1 className="text-xl font-semibold">CineDash</h1>
         <nav className="flex items-center gap-2">
+          <Button variant="ghost" size="sm" asChild>
+            <Link to="/watchlist">Minha Lista</Link>
+          </Button>
           <Button
             variant="outline"
             size="sm"

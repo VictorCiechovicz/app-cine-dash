@@ -1,8 +1,20 @@
 import { Link } from '@tanstack/react-router'
 import { getPosterUrl, type TmdbMovie } from '@/api/tmdb'
+import { useWatchlistStore } from '@/stores/use-watchlist-store'
+import { Button } from '@/components/ui/button'
+import { ListPlus, Check } from 'lucide-react'
 
 export function MovieCard({ movie }: { movie: TmdbMovie }) {
   const posterUrl = getPosterUrl(movie.poster_path, 'w500')
+  const { has, addFromMovie, remove } = useWatchlistStore()
+  const inList = has(movie.id)
+
+  const handleListClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (inList) remove(movie.id)
+    else addFromMovie(movie)
+  }
 
   return (
     <Link
@@ -11,7 +23,22 @@ export function MovieCard({ movie }: { movie: TmdbMovie }) {
       className="group flex flex-col overflow-hidden rounded-lg border border-border bg-card shadow-sm transition-shadow hover:shadow-md"
       data-testid="movie-card"
     >
-      <div className="aspect-[2/3] w-full bg-muted">
+      <div className="relative aspect-[2/3] w-full bg-muted">
+        <Button
+          type="button"
+          variant="secondary"
+          size="icon"
+          className="absolute right-2 top-2 z-10 size-8 rounded-full shadow-md"
+          onClick={handleListClick}
+          aria-label={inList ? 'Remover da lista' : 'Adicionar à lista'}
+          title={inList ? 'Remover da lista' : 'Adicionar à lista'}
+        >
+          {inList ? (
+            <Check className="size-4 text-primary" />
+          ) : (
+            <ListPlus className="size-4" />
+          )}
+        </Button>
         {posterUrl ? (
           <img
             src={posterUrl}

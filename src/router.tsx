@@ -5,6 +5,7 @@ import { RegisterPage } from './routes/register'
 import { HomePage } from './routes/home'
 import { LoginPage } from './routes/login'
 import { MovieDetailPage } from './routes/movie.$id'
+import { WatchlistPage } from './routes/watchlist'
 
 function requireAuth() {
   if (!getToken()) {
@@ -44,12 +45,20 @@ const movieDetailRoute = createRoute({
   beforeLoad: requireAuth
 })
 
+const watchlistRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/watchlist',
+  component: WatchlistPage,
+  beforeLoad: requireAuth
+})
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   loginRoute,
   registerRoute,
   homeRoute,
-  movieDetailRoute
+  movieDetailRoute,
+  watchlistRoute
 ])
 
 export const router = createRouter({ routeTree })

@@ -2,6 +2,8 @@ import { useQuery } from '@tanstack/react-query'
 import { Link, useParams } from '@tanstack/react-router'
 import { fetchMovieDetails, getPosterUrl, type TmdbVideo } from '@/api/tmdb'
 import { Button } from '@/components/ui/button'
+import { useWatchlistStore } from '@/stores/use-watchlist-store'
+import { ListPlus, Check } from 'lucide-react'
 
 function getTrailerUrl(video: TmdbVideo): string | null {
   if (video.site !== 'YouTube' || !video.key) return null
@@ -17,6 +19,7 @@ export function MovieDetailPage() {
   const params = useParams({ strict: false })
   const id = params?.id
   const movieId = id != null ? Number(id) : NaN
+  const { has, addFromDetails, remove } = useWatchlistStore()
 
   const {
     data: movie,
@@ -66,6 +69,9 @@ export function MovieDetailPage() {
           <Button asChild variant="ghost" size="sm">
             <Link to="/home">← Voltar</Link>
           </Button>
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/watchlist">Minha Lista</Link>
+          </Button>
         </div>
       </header>
 
@@ -87,9 +93,32 @@ export function MovieDetailPage() {
             </div>
 
             <div className="flex flex-col gap-4">
-              <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
-                {movie.title}
-              </h1>
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-2xl font-bold tracking-tight md:text-3xl">
+                  {movie.title}
+                </h1>
+                <Button
+                  type="button"
+                  variant={movie && has(movie.id) ? 'secondary' : 'outline'}
+                  size="sm"
+                  onClick={() =>
+                    has(movie.id) ? remove(movie.id) : addFromDetails(movie)
+                  }
+                  className="shrink-0"
+                >
+                  {movie && has(movie.id) ? (
+                    <>
+                      <Check className="mr-1.5 size-4" />
+                      Na lista
+                    </>
+                  ) : (
+                    <>
+                      <ListPlus className="mr-1.5 size-4" />
+                      Adicionar à lista
+                    </>
+                  )}
+                </Button>
+              </div>
 
               <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                 {movie.release_date && (

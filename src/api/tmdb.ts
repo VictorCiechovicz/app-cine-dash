@@ -8,6 +8,7 @@ export interface TmdbMovie {
   release_date: string
   vote_average: number
   overview: string
+  genre_ids?: number[]
 }
 
 export interface TmdbPaginatedResponse<T> {
