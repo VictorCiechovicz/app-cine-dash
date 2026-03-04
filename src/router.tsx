@@ -4,6 +4,7 @@ import { Route as rootRoute } from './routes/__root'
 import { RegisterPage } from './routes/register'
 import { HomePage } from './routes/home'
 import { LoginPage } from './routes/login'
+import { MovieDetailPage } from './routes/movie.$id'
 
 function requireAuth() {
   if (!getToken()) {
@@ -36,11 +37,19 @@ const homeRoute = createRoute({
   beforeLoad: requireAuth
 })
 
+const movieDetailRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/movie/$id',
+  component: MovieDetailPage,
+  beforeLoad: requireAuth
+})
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   loginRoute,
   registerRoute,
-  homeRoute
+  homeRoute,
+  movieDetailRoute
 ])
 
 export const router = createRouter({ routeTree })

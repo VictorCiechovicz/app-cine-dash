@@ -1,10 +1,13 @@
+import { Link } from '@tanstack/react-router'
 import { getPosterUrl, type TmdbMovie } from '@/api/tmdb'
 
 export function MovieCard({ movie }: { movie: TmdbMovie }) {
   const posterUrl = getPosterUrl(movie.poster_path, 'w500')
 
   return (
-    <article
+    <Link
+      to="/movie/$id"
+      params={{ id: String(movie.id) }}
       className="group flex flex-col overflow-hidden rounded-lg border border-border bg-card shadow-sm transition-shadow hover:shadow-md"
       data-testid="movie-card"
     >
@@ -41,6 +44,6 @@ export function MovieCard({ movie }: { movie: TmdbMovie }) {
           </span>
         </div>
       </div>
-    </article>
+    </Link>
   )
 }

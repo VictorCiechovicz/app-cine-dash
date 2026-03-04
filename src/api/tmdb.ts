@@ -28,6 +28,31 @@ export interface MovieFilters {
   minRating: string
 }
 
+export interface TmdbCastMember {
+  id: number
+  name: string
+  character: string
+  profile_path: string | null
+}
+
+export interface TmdbVideo {
+  key: string
+  site: string
+  type: string
+  name: string
+}
+
+export interface TmdbMovieDetails extends TmdbMovie {
+  overview: string
+  runtime: number | null
+  genres: TmdbGenre[]
+}
+
+export interface TmdbMovieDetailsResponse extends TmdbMovieDetails {
+  credits?: { cast: TmdbCastMember[] }
+  videos?: { results: TmdbVideo[] }
+}
+
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY
 
 export function getPosterUrl(
@@ -85,6 +110,16 @@ export async function discoverMovies(
 ): Promise<TmdbPaginatedResponse<TmdbMovie>> {
   const query = buildDiscoverParams(filters, page)
   const res = await fetch(`${TMDB_BASE}/discover/movie?${query}`)
+  if (!res.ok) throw new Error(`TMDB API error: ${res.status}`)
+  return res.json()
+}
+
+export async function fetchMovieDetails(
+  movieId: number
+): Promise<TmdbMovieDetailsResponse> {
+  const res = await fetch(
+    `${TMDB_BASE}/movie/${movieId}?api_key=${API_KEY}&language=pt-BR&append_to_response=credits,videos`
+  )
   if (!res.ok) throw new Error(`TMDB API error: ${res.status}`)
   return res.json()
 }
